@@ -60,4 +60,13 @@ public class PetService {
             throw exception;
         }
     }
+
+    public void deletePet(int id) throws MenagerieException {
+        // Check if pet exists
+        if (petRepository.existsById(id)) {
+            petRepository.deleteById(id); // Delete the pet by id
+        } else {
+            throw new MenagerieException("Pet with id " + id + " not found");
+        }
+    }
 }

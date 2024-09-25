@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +22,9 @@ import java.util.List;
 @Validated
 public class PetController {
     private static final Log LOGGER = LogFactory.getLog(PetController.class);
+
+    @Autowired
+    private Environment environment;
 
     @Autowired
     private PetService petService;
@@ -39,5 +43,12 @@ public class PetController {
     @PutMapping(value="/pets/{id}")
     public ResponseEntity<Pet> updatePet(@PathVariable("id") @NotNull(message = "{pet.id.blank}") Integer id, @Valid @RequestBody Pet pet) throws MenagerieException {
         return new ResponseEntity<>(petService.updatePet(id, pet), HttpStatus.OK);
+    }
+
+    @DeleteMapping(value="/pet/{id}")
+    public ResponseEntity<String> deletePet(@PathVariable("id") @NotNull(message = "{pet.id.blank}") Integer id) throws MenagerieException {
+        petService.deletePet(id);
+        String response = environment.getProperty("API.PET_DELETE_SUCCESS") + id;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
