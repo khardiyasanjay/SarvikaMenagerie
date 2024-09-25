@@ -29,7 +29,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(MenagerieException.class)
     public ResponseEntity<ErrorInfo> infyBankexceptionHandler(MenagerieException exception) {
         ErrorInfo error = new ErrorInfo();
-        error.setErrorMessage(environment.getProperty(exception.getMessage()));
+        error.setErrorMessage(exception.getMessage());
         error.setTimestamp(LocalDateTime.now());
         error.setErrorCode(HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<ErrorInfo>(error, HttpStatus.NOT_FOUND);

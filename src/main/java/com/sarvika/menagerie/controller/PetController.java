@@ -1,8 +1,10 @@
 package com.sarvika.menagerie.controller;
 
 import com.sarvika.menagerie.entity.Pet;
+import com.sarvika.menagerie.exception.MenagerieException;
 import com.sarvika.menagerie.service.PetService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +34,10 @@ public class PetController {
     @GetMapping(value="/pets")
     public ResponseEntity<List<Pet>> listAllPets(){
         return new ResponseEntity<>(petService.listAllPets(), HttpStatus.OK);
+    }
+
+    @PutMapping(value="/pets/{id}")
+    public ResponseEntity<Pet> updatePet(@PathVariable("id") @NotNull(message = "{pet.id.blank}") Integer id, @Valid @RequestBody Pet pet) throws MenagerieException {
+        return new ResponseEntity<>(petService.updatePet(id, pet), HttpStatus.OK);
     }
 }
