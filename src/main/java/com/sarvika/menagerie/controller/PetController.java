@@ -36,8 +36,8 @@ public class PetController {
     }
 
     @GetMapping(value="/pets")
-    public ResponseEntity<List<Pet>> listAllPets(){
-        return new ResponseEntity<>(petService.listAllPets(), HttpStatus.OK);
+    public ResponseEntity<List<Pet>> listAllPets(@RequestParam(required = false) String species){
+        return new ResponseEntity<>(petService.listAllPets(species), HttpStatus.OK);
     }
 
     @PutMapping(value="/pets/{id}")

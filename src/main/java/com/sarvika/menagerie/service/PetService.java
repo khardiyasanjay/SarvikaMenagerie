@@ -27,13 +27,11 @@ public class PetService {
         return petSaved;
     }
 
-    public List<Pet> listAllPets(){
-        Iterable<Pet> pets = petRepository.findAll();
-        List<Pet> petList = new ArrayList<>();
-        for (Pet pet : pets) {
-            petList.add(pet);
+    public List<Pet> listAllPets(String species){
+        if (species != null) {
+            return petRepository.findBySpecies(species); // Filter by species
         }
-        return petList;
+        return (List<Pet>) petRepository.findAll();
     }
 
     public Pet updatePet(int id, Pet updatedPet) throws MenagerieException {
