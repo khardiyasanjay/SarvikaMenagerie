@@ -2,13 +2,18 @@ package com.sarvika.menagerie.service;
 
 import com.sarvika.menagerie.dao.EventRepository;
 import com.sarvika.menagerie.dao.PetRepository;
+import com.sarvika.menagerie.dto.PetEvents;
 import com.sarvika.menagerie.entity.Event;
 import com.sarvika.menagerie.entity.Pet;
 import com.sarvika.menagerie.exception.MenagerieException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -20,18 +25,17 @@ public class EventService {
     private PetRepository petRepository;
 
     public Event addEventToPet(int petId, LocalDate date, String type, String remark) throws MenagerieException {
-        // Check if the Pet exists
+        // Checking if the Pet exists
         Optional<Pet> optionalPet = petRepository.findById(petId);
         if (!optionalPet.isPresent()) {
             throw new MenagerieException("Pet with id " + petId + " not found");
         }
 
-        // Check if an event already exists for the same pet on the same date
         if (eventRepository.existsByPetIdAndDate(petId, date)) {
-            throw new MenagerieException("An event already exists for this pet on this date");
+            throw new MenagerieException("An event already exists for this pet with given date");
         }
 
-        // Create a new event
+        // Creating new event with existing pet object
         Pet pet = optionalPet.get();
         Event newEvent = new Event();
         newEvent.setPet(pet);
@@ -39,7 +43,25 @@ public class EventService {
         newEvent.setType(type);
         newEvent.setRemark(remark);
 
-        // Save the event to the repository
         return eventRepository.save(newEvent);
+    }
+
+    public PetEvents getPetWithEvents(int petId, String sortBy, String sortOrder) throws MenagerieException {
+        Optional<Pet> optionalPet = petRepository.findById(petId);
+        if (!optionalPet.isPresent()) {
+            throw new MenagerieException("Pet with id " + petId + " not found");
+        }
+
+        // Creating the sorting order
+        Sort.Direction direction = Sort.Direction.fromString(sortOrder);
+        Sort sort = Sort.by(direction, sortBy);
+
+
+        List<Event> events = eventRepository.findByPetId(petId, sort);
+
+        PetEvents petEvents = new PetEvents();
+        petEvents.setPet(optionalPet.get());
+        petEvents.setEventList(events);
+        return petEvents;
     }
 }

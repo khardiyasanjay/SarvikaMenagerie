@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
@@ -35,4 +36,33 @@ public class Pet {
     private LocalDate birth;
     @PastOrPresent(message = "{pet.death.invalid}")
     private LocalDate death;
+
+    @Override
+    public int hashCode() {
+        if (id != 0) {
+            return Objects.hash(id);
+        }
+
+        // If id is not set, using other fields
+        return Objects.hash(name, owner, species, sex, birth, death);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Pet pet = (Pet) o;
+
+        if (id != 0 && pet.id != 0) {
+            return id == pet.id;
+        }
+
+        return Objects.equals(name, pet.name) &&
+                Objects.equals(owner, pet.owner) &&
+                Objects.equals(species, pet.species) &&
+                sex == pet.sex &&
+                Objects.equals(birth, pet.birth) &&
+                Objects.equals(death, pet.death);
+    }
 }

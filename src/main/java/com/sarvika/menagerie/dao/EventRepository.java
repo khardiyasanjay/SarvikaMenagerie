@@ -1,6 +1,7 @@
 package com.sarvika.menagerie.dao;
 
 import com.sarvika.menagerie.entity.Event;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +12,5 @@ import java.util.List;
 public interface EventRepository extends CrudRepository<Event, Integer> {
     List<Event> findByPetId(int petId);
     boolean existsByPetIdAndDate(int petId, LocalDate date);
+    List<Event> findByPetId(int petId, Sort sort);
 }

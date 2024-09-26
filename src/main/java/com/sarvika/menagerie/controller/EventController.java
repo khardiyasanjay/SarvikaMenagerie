@@ -1,5 +1,6 @@
 package com.sarvika.menagerie.controller;
 
+import com.sarvika.menagerie.dto.PetEvents;
 import com.sarvika.menagerie.entity.Event;
 import com.sarvika.menagerie.exception.MenagerieException;
 import com.sarvika.menagerie.service.EventService;
@@ -28,5 +29,14 @@ public class EventController {
                                           @RequestParam(value = "remark", required = false) String remark) throws MenagerieException {
         Event newEvent = eventService.addEventToPet(petId, date, type, remark);
         return new ResponseEntity<>(newEvent, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PetEvents> getPetWithEvents(
+            @PathVariable("id") int petId,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "date") String sortBy,
+            @RequestParam(value = "sortOrder", required = false, defaultValue = "DESC") String sortOrder) throws MenagerieException {
+        PetEvents petEvents = eventService.getPetWithEvents(petId, sortBy, sortOrder);
+        return new ResponseEntity<>(petEvents, HttpStatus.OK);
     }
 }
