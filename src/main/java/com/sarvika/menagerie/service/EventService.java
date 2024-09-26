@@ -6,18 +6,19 @@ import com.sarvika.menagerie.dto.PetEvents;
 import com.sarvika.menagerie.entity.Event;
 import com.sarvika.menagerie.entity.Pet;
 import com.sarvika.menagerie.exception.MenagerieException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class EventService {
+    private static final Log LOGGER = LogFactory.getLog(EventService.class);
 
     @Autowired
     private EventRepository eventRepository;
@@ -47,21 +48,26 @@ public class EventService {
     }
 
     public PetEvents getPetWithEvents(int petId, String sortBy, String sortOrder) throws MenagerieException {
-        Optional<Pet> optionalPet = petRepository.findById(petId);
-        if (!optionalPet.isPresent()) {
-            throw new MenagerieException("Pet with id " + petId + " not found");
+        try {
+            Optional<Pet> optionalPet = petRepository.findById(petId);
+            if (!optionalPet.isPresent()) {
+                throw new MenagerieException("Pet with id " + petId + " not found");
+            }
+
+            // Creating the sorting order
+            Sort.Direction direction = Sort.Direction.fromString(sortOrder);
+            Sort sort = Sort.by(direction, sortBy);
+
+
+            List<Event> events = eventRepository.findByPetId(petId, sort);
+
+            PetEvents petEvents = new PetEvents();
+            petEvents.setPet(optionalPet.get());
+            petEvents.setEventList(events);
+            return petEvents;
+        } catch (MenagerieException exception){
+            LOGGER.error(exception.getMessage(), exception);
+            throw exception;
         }
-
-        // Creating the sorting order
-        Sort.Direction direction = Sort.Direction.fromString(sortOrder);
-        Sort sort = Sort.by(direction, sortBy);
-
-
-        List<Event> events = eventRepository.findByPetId(petId, sort);
-
-        PetEvents petEvents = new PetEvents();
-        petEvents.setPet(optionalPet.get());
-        petEvents.setEventList(events);
-        return petEvents;
     }
 }

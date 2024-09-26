@@ -40,7 +40,7 @@ public class PetService {
             if (optionalPet.isPresent()) {
                 Pet existingPet = optionalPet.get();
 
-                // Update pet details
+                // Updating pet details
                 existingPet.setName(updatedPet.getName());
                 existingPet.setOwner(updatedPet.getOwner());
                 existingPet.setSpecies(updatedPet.getSpecies());
@@ -48,7 +48,6 @@ public class PetService {
                 existingPet.setBirth(updatedPet.getBirth());
                 existingPet.setDeath(updatedPet.getDeath());
 
-                // Save the updated pet
                 return petRepository.save(existingPet);
             } else {
                 throw new MenagerieException("Pet with id " + id + " not found");
