@@ -20,6 +20,7 @@ public class Pet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @Column(nullable = false, length = 20)
     @NotBlank(message = "{pet.name.blank}")
     private String name;

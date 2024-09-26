@@ -83,3 +83,4 @@ com.sarvika.menagerie.exception.MenagerieException: Pet with id 37 not found
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.7.jar:10.1.7]
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-10.1.7.jar:10.1.7]
 	at java.lang.Thread.run(Thread.java:833) ~[?:?]
+26-Sep-2024 02:33:27 INFO - Pet added Pet(id=37, name=sherkhan, owner=raja, species=house, sex=null, birth=2024-01-26, death=2024-07-26)
